@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVA Reliability</title>
+    <meta
+      name="description"
+      content="NOVA Reliability helps customers understand store trust, availability and delivery reliability before they order."
+    />
+    <style>
+      :root {
+        --bg: #f5f4fb;
+        --panel: #ffffff;
+        --panel-soft: #f1efff;
+        --line: #e7e2fb;
+        --ink: #1a1633;
+        --muted: #6a6686;
+        --primary: #5b4bd5;
+        --primary-deep: #3d2ca6;
+        --primary-soft: #eee9ff;
+        --green-soft: #def9ea;
+        --green: #128a4f;
+        --amber-soft: #fff2cc;
+        --amber: #a46300;
+        --red-soft: #ffe1e3;
+        --red: #b34242;
+        --shadow: 0 18px 45px rgba(38, 26, 98, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(180deg, #f7f6ff 0%, #f3f0ff 100%);
+        color: var(--ink);
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(10px);
+        background: rgba(27, 20, 69, 0.82);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 76px;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #7e68ff, #4737d3);
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+      }
+
+      .brand-mark::before {
+        content: "N";
+        font-size: 1.1rem;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .nav-links a {
+        color: rgba(255,255,255,0.8);
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 0.96rem;
+        transition: 0.2s ease;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: rgba(255,255,255,0.08);
+        color: white;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border-radius: 12px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-deep));
+        box-shadow: 0 12px 25px rgba(91, 75, 213, 0.25);
+        color: white;
+      }
+
+      .button.secondary {
+        background: rgba(91, 75, 213, 0.08);
+        color: var(--primary);
+      }
+
+      .hero {
+        padding: 72px 0 30px;
+      }
+
+      .hero-card {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 30px;
+        background: linear-gradient(135deg, #4f3fcf 0%, #7a3fc0 100%);
+        color: white;
+        padding: clamp(24px, 4vw, 48px);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 16px;
+        font-size: clamp(2.3rem, 5vw, 4.2rem);
+        line-height: 1.05;
+        letter-spacing: -0.06em;
+      }
+
+      .hero-copy p {
+        max-width: 620px;
+        color: rgba(255,255,255,0.86);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        margin: 0 0 24px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+
+      .mini-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .mini-stat {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+
+      .mini-stat strong {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+      }
+
+      .mini-stat span {
+        color: rgba(255,255,255,0.75);
+        font-size: 0.83rem;
+      }
+
+      .hero-panel {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+      }
+
+      .dashboard {
+        width: min(100%, 420px);
+        background: rgba(18, 15, 36, 0.14);
+        border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 24px;
+        padding: 18px 18px 16px;
+      }
+
+      .dash-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+
+      .pill.green {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .pill.orange {
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+
+      .pill.red {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+
+      .store-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .store-item {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        padding: 14px 12px;
+      }
+
+      .store-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .store-name {
+        font-weight: 700;
+      }
+
+      .meter {
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        overflow: hidden;
+      }
+
+      .meter span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #8cfcad, #4fd18c);
+      }
+
+      .store-meta {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.74);
+        margin-top: 8px;
+      }
+
+      main {
+        padding: 28px 0 56px;
+      }
+
+      section {
+        margin-bottom: 28px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(1.7rem, 2.6vw, 2.6rem);
+        letter-spacing: -0.05em;
+      }
+
+      .section-head p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 510px;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: 0 8px 18px rgba(23, 20, 49, 0.04);
+      }
+
+      .metric-card {
+        padding: 18px 18px 16px;
+      }
+
+      .metric-card .label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+
+      .metric-card .value {
+        font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+        line-height: 1.1;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        margin-bottom: 10px;
+      }
+
+      .metric-card .meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .icon-box {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+      }
+
+      .icon-box.purple { background: var(--primary-soft); color: var(--primary); }
+      .icon-box.green { background: var(--green-soft); color: var(--green); }
+      .icon-box.orange { background: var(--amber-soft); color: var(--amber); }
+      .icon-box.red { background: var(--red-soft); color: var(--red); }
+
+      .story-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 22px;
+      }
+
+      .story-card {
+        padding: 26px;
+      }
+
+      .story-card h3 {
+        margin: 0 0 12px;
+        font-size: 1.4rem;
+      }
+
+      .story-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .list {
+        list-style: none;
+        padding: 0;
+        margin: 18px 0 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .list li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .check {
+        flex: 0 0 auto;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        margin-top: 2px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-weight: 800;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .feature-card {
+        padding: 22px 20px;
+      }
+
+      .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--primary);
+        background: var(--primary-soft);
+        margin-bottom: 18px;
+      }
+
+      .feature-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.2rem;
+      }
+
+      .feature-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .insight-wrap {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 22px;
+      }
+
+      .chart-box {
+        padding: 22px;
+      }
+
+      .bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        height: 180px;
+        padding-top: 12px;
+      }
+
+      .bar-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .bar {
+        width: 100%;
+        max-width: 42px;
+        border-radius: 12px 12px 0 0;
+        background: linear-gradient(180deg, #7f66ff, #4d3bd9);
+      }
+
+      .bar-label {
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      .control-card {
+        padding: 22px;
+      }
+
+      .switcher {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 18px 0 20px;
+      }
+
+      .switcher button {
+        background: white;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .switcher button.active {
+        background: var(--primary-soft);
+        border-color: rgba(91, 75, 213, 0.2);
+        color: var(--primary);
+      }
+
+      .control-card .score {
+        font-size: 2.3rem;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        color: var(--primary);
+      }
+
+      .cta {
+        padding: 30px 32px;
+        background: linear-gradient(135deg, #1b1445 0%, #2d2768 100%);
+        border-radius: 26px;
+        color: white;
+        display: grid;
+        grid-template-columns: 1.2fr auto;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .cta h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.7rem, 3vw, 2.5rem);
+        letter-spacing: -0.05em;
+      }
+
+      .cta p {
+        margin: 0;
+        color: rgba(255,255,255,0.8);
+      }
+
+      footer {
+        padding: 22px 0 42px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 900px) {
+        .hero-card,
+        .story-grid,
+        .insight-wrap,
+        .cta,
+        .feature-grid,
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding-top: 44px;
+        }
+      }
+
+      @media (max-width: 580px) {
+        .nav {
+          flex-direction: column;
+          justify-content: center;
+          padding: 16px 0;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .mini-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .dashboard {
+          padding: 14px;
+        }
+
+        .cta {
+          padding: 22px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="brand" aria-label="NOVA reliability brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>NOVA <span style="color:#b9adff;">Reliability</span></span>
+        </div>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a class="active" href="#overview">Overview</a>
+          <a href="#impact">Impact</a>
+          <a href="#features">Features</a>
+          <a href="#insights">Insights</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="overview">
+      <div class="container hero-card">
+        <div class="hero-copy">
+          <span class="kicker">Local commerce, made reliable</span>
+          <h1>From growth at any cost to reliable local commerce.</h1>
+          <p>
+            NOVA Reliability helps customers understand how likely an order is to arrive complete,
+            while helping partner stores fix availability gaps before they become delivery failures.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#contact">Get started</a>
+            <a class="button secondary" href="#features">See how it works</a>
+          </div>
+
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <strong>94%</strong>
+              <span>store reliability</span>
+            </div>
+            <div class="mini-stat">
+              <strong>37 min</strong>
+              <span>avg delivery time</span>
+            </div>
+            <div class="mini-stat">
+              <strong>620+</strong>
+              <span>stores supported</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Store reliability dashboard preview">
+          <div class="dashboard">
+            <div class="dash-top">
+              <strong>Store score</strong>
+              <span class="pill green">Healthy</span>
+            </div>
+
+            <div class="store-list">
+              <div class="store-item">
+                <div class="store-row">
+                  <span class="store-name">Sai Lakshmi Stores</span>
+                  <strong>94%</strong>
+                </div>
+                <div class="meter"><span style="width:94%"></span></div>
+                <div class="store-meta">ETA 24 min • 450 orders/day</div>
+              </div>
+
+              <div class="store-item">
+                <div class="store-row">
+                  <span class="store-name">City Fresh Mart</span>
+                  <strong>88%</strong>
+                </div>
+                <div class="meter"><span style="width:88%"></span></div>
+                <div class="store-meta">ETA 31 min • 600 orders/day</div>
+              </div>
+
+              <div class="store-item">
+                <div class="store-row">
+                  <span class="store-name">Local Basket</span>
+                  <strong>81%</strong>
+                </div>
+                <div class="meter"><span style="width:81%"></span></div>
+                <div class="store-meta">ETA 35 min • 158 orders/day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <div class="container">
+        <section id="impact">
+          <div class="section-head">
+            <h2>Why NOVA Reliability?</h2>
+            <p>
+              Quick commerce is still solved by speed, but the real edge is reliability at the last mile.
+            </p>
+          </div>
+
+          <div class="metrics">
+            <article class="card metric-card">
+              <div class="label">Cancellation rate</div>
+              <div class="value">11%</div>
+              <div class="meta">
+                <span>from 6%</span>
+                <span class="icon-box red">↗</span>
+              </div>
+            </article>
+
+            <article class="card metric-card">
+              <div class="label">Repeat purchase</div>
+              <div class="value">27%</div>
+              <div class="meta">
+                <span>from 41%</span>
+                <span class="icon-box orange">↘</span>
+              </div>
+            </article>
+
+            <article class="card metric-card">
+              <div class="label">Delivery wait</div>
+              <div class="value">37 min</div>
+              <div class="meta">
+                <span>avg across stores</span>
+                <span class="icon-box purple">⏱</span>
+              </div>
+            </article>
+
+            <article class="card metric-card">
+              <div class="label">Support tickets</div>
+              <div class="value">5,900</div>
+              <div class="meta">
+                <span>monthly volume</span>
+                <span class="icon-box green">◎</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <div class="story-grid">
+            <article class="card story-card">
+              <h3>What the problem looked like</h3>
+              <p>
+                Orders grew quickly, but trust began to decay. Supply gaps, delayed fulfillment, and low
+                inventory confidence were causing preventable cancellations and lower repeat business.
+              </p>
+              <ul class="list">
+                <li><span class="check">✓</span> Availability was not visible before checkout.</li>
+                <li><span class="check">✓</span> Customers could not compare store confidence or ETA quality.</li>
+                <li><span class="check">✓</span> Store teams lacked a clear exception queue for missing items.</li>
+              </ul>
+            </article>
+
+            <article class="card story-card">
+              <h3>How NOVA fixes it</h3>
+              <p>
+                By surfacing live inventory confidence, reliability rankings, and operational alerts, the system
+                helps both shoppers and stores make better decisions before the order is confirmed.
+              </p>
+              <ul class="list">
+                <li><span class="check">✓</span> Rank stores using reliability, distance, ETA, and inventory confidence.</li>
+                <li><span class="check">✓</span> Surface inventory exceptions before they turn into failed deliveries.</li>
+                <li><span class="check">✓</span> Give customers a transparent view of order confidence before payment.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="features">
+          <div class="section-head">
+            <h2>Built for customer trust</h2>
+            <p>Every experience is designed to reduce uncertainty and protect conversion quality.</p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="card feature-card">
+              <div class="feature-icon">★</div>
+              <h3>Reliability scoring</h3>
+              <p>Show how likely a store is to deliver a complete order, using product availability and ETA signals.</p>
+            </article>
+
+            <article class="card feature-card">
+              <div class="feature-icon">⟡</div>
+              <h3>Smart substitute logic</h3>
+              <p>When an item is unavailable, customers can quickly switch to the next best option without losing trust.</p>
+            </article>
+
+            <article class="card feature-card">
+              <div class="feature-icon">▣</div>
+              <h3>Operations visibility</h3>
+              <p>Partner stores see exceptions, workload, and performance trends in a single operational view.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="insights">
+          <div class="section-head">
+            <h2>Operational insights</h2>
+            <p>Risk scoring is paired with revenue performance, so teams can act on the right signal.</p>
+          </div>
+
+          <div class="insight-wrap">
+            <article class="card chart-box">
+              <div class="store-row" style="margin-bottom: 18px;">
+                <strong>Customer trust trend</strong>
+                <span class="pill orange">Monthly view</span>
+              </div>
+
+              <div class="bars" aria-label="Trend chart for reliability metrics">
+                <div class="bar-col">
+                  <div class="bar" style="height: 72%;"></div>
+                  <div class="bar-label">Apr</div>
+                </div>
+                <div class="bar-col">
+                  <div class="bar" style="height: 68%;"></div>
+                  <div class="bar-label">May</div>
+                </div>
+                <div class="bar-col">
+                  <div class="bar" style="height: 62%;"></div>
+                  <div class="bar-label">Jun</div>
+                </div>
+                <div class="bar-col">
+                  <div class="bar" style="height: 56%;"></div>
+                  <div class="bar-label">Jul</div>
+                </div>
+                <div class="bar-col">
+                  <div class="bar" style="height: 52%;"></div>
+                  <div class="bar-label">Aug</div>
+                </div>
+                <div class="bar-col">
+                  <div class="bar" style="height: 48%;"></div>
+                  <div class="bar-label">Sep</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="card control-card">
+              <strong>Model confidence</strong>
+              <div class="switcher" aria-label="Performance selector">
+                <button class="active" type="button">Reliable</button>
+                <button type="button">Fastest</button>
+                <button type="button">Local</button>
+              </div>
+
+              <div class="score">94.2</div>
+              <p style="margin: 8px 0 0; color: var(--muted); line-height: 1.7;">
+                The reliability model prioritizes inventory confidence, fulfillment quality, ETA, and local-store trust.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="contact">
+          <div class="cta">
+            <div>
+              <h3>Ready to build a more trustworthy local commerce experience?</h3>
+              <p>NOVA Reliability turns uncertainty into a competitive advantage for both customers and stores.</p>
+            </div>
+            <div>
+              <a class="button primary" href="mailto:hello@nova.example">Talk to us</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container footer-row">
+        <span>© 2026 NOVA Reliability</span>
+        <span>Local trust for faster, better orders.</span>
+      </div>
+    </footer>
+  </body>
+</html>
